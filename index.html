@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Budget Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&family=Madimi+One&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login/Signup Modal -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+            
+            <div id="login-form" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Login</button>
+                    <div class="auth-divider">or</div>
+                    <button type="button" class="google-auth-btn" id="modal-google-signin">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                </form>
+            </div>
+            
+            <div id="signup-form" class="auth-form">
+                <h2>Create Account</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <img src="smart-logo-1-4.png" alt="logo">
+        </div>
+        <div class="user-profile" id="userProfile">
+            <div class="profile-icon" id="profileIcon" style="display: none;">
+                <img src="" alt="Profile" id="profileIcon">
+                <span id="profileName"></span>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button id="signOutBtn">Sign Out</button>
+            </div>
+        </div>
+    </header>
+    <div class="dashboard">
+        <div class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidelist">
+                <ul>
+                    <li class="active" data-page="dashboard"><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                    <li data-page="upload"><a href="upload.html"><i class="fa-solid fa-upload"></i> Upload</a></li>
+                    <li data-page="reports"><a href="#"><i class="fa-solid fa-chart-pie"></i> Reports</a></li>
+                    <li data-page="settings"><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                    <li data-page="faq"><a href="#"><i class="fa-solid fa-question-circle"></i> FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="dash-body">
+            <div class="dash-contents">
+                <div id="dashboard-page" class="page-container active">
+                    <div class="page-title">
+                        <h1>Dashboard</h1>
+                        <p>Your financial overview at a glance</p>
+                    </div>
+                    <div class="money-tracker">
+                        <h2>Manual Planner</h2>
+                        <div class="input-section">
+                            <label for="type-select">Type:</label>
+                            <select id="type-select">
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                            <label for="category-select">Category:</label>
+                            <select id="category-select">
+                                <option value="Salary">Salary</option>
+                                <option value="Freelance">Freelance</option>
+                                <option value="Investment">Investment</option>
+                                <option value="Rent">Rent</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Food">Food</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Entertainment">Entertainment</option>
+                            </select>
+                            <label for="amount-input">Amount:</label>
+                            <input type="number" id="amount-input" placeholder="Enter amount">
+                            <label for="date-input">Date:</label>
+                            <input type="date" id="date-input">
+                            <button id="add-btn">Add</button>
+                        </div>
+                        <div class="summary-section">
+                            <div>
+                                <h3>Total Income</h3>
+                                <p id="total-income">KSh 0</p>
+                            </div>
+                            <div>
+                                <h3>Total Expenses</h3>
+                                <p id="total-expenses">KSh 0</p>
+                            </div>
+                            <div>
+                                <h3>Net Balance</h3>
+                                <p id="net-balance">KSh 0</p>
+                            </div>
+                        </div>
+                        <div class="transactions-list">
+                            <h3>Transactions</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Expense Distribution</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="upload-page" class="page-container">
+                    <div class="page-title">
+                        <h1>Upload</h1>
+                        <p>Upload your financial documents for analysis and insights</p>
+                    </div>
+                    
+                    <!-- Upload Card -->
+                    <div class="upload-card" id="upload-section">
+                        <h3>Upload Financial Documents</h3>
+                        
+                        <div class="upload-area" id="drop-area">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p class="main-text">Drag & drop your financial documents here</p>
+                            <p class="sub-text">or</p>
+                            <button type="button" class="upload-btn" id="browse-btn">
+                                <i class="fas fa-folder-open"></i> Select Files
+                            </button>
+                            <input type="file" id="statementUpload" accept=".pdf,.csv,.xlsx,.docx" style="display: none;">
+                            <div id="file-info" class="file-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span>No file selected</span>
+                            </div>
+                        </div>
+                        
+                        <div class="supported-formats">
+                            <p>Supported formats:</p>
+                            <div class="formats-list">
+                                <span class="format-tag">PDF</span>
+                                <span class="format-tag">CSV</span>
+                                <span class="format-tag">Excel</span>
+                                <span class="format-tag">Word</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ask AI Section -->
+                    <div class="ask-section">
+                        <h4><i class="fas fa-robot"></i> Ask About Your Document</h4>
+                        <textarea id="userPrompt" placeholder="Example questions:
+- Summarize the key financial points
+- What are my main spending categories?
+- Show me trends in my income vs expenses"></textarea>
+                        
+                        <div class="button-group">
+                            <button type="button" class="ask-btn" id="analyze-btn">
+                                <i class="fas fa-magic"></i> Analyze Document
+                            </button>
+                            <button type="button" class="clear-btn" id="clear-btn">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+                        
+                        <div id="spinner" class="spinner"></div>
+                        <div id="error-message" class="error-message"></div>
+                        <div id="success-message" class="success-message"></div>
+                        
+                        <div class="ai-response-container" id="ai-response-container" style="display: none;">
+                            <div class="ai-response-title">
+                                <i class="fas fa-lightbulb"></i>
+                                <h5>Analysis Results</h5>
+                            </div>
+                            <div id="aiResponse" class="ai-response"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reports-page" class="page-container">
+                    <div class="page-title">
+                        <h1>Financial Reports</h1>
+                        <p>View and manage your financial analysis reports</p>
+                    </div>
+                    
+                    <div class="reports-container" id="reports-container">
+                        <!-- Reports will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Modal for Full Report View -->
+                <div id="reportModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal" onclick="closeModal()">&times;</span>
+                        <div class="modal-header">
+                            <h2 id="modalReportTitle">Financial Report</h2>
+                            <p id="modalReportDate" class="text-muted"></p>
+                        </div>
+                        <div class="modal-body">
+                            <div id="modalReportContent">
+                                <!-- Full report content will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="settings-page" class="page-container">
+                    <div class="page-title">
+                        <h1>Settings</h1>
+                        <p>Customize your account preferences</p>
+                    </div>
+                    <div class="settings-section">
+                        <h2>Account Settings</h2>
+                        <div class="settings-group">
+                            <h3>Profile Information</h3>
+                            <div class="setting-item">
+                                <div>
+                                    <div class="setting-label">Name</div>
+                                    <div id="userName" class="setting-description">Not signed in</div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <div class="setting-label">Email</div>
+                                    <div id="userEmail" class="setting-description">Not signed in</div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <div class="setting-label">Account Created</div>
+                                    <div id="userCreated" class="setting-description">Not available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <h3>Preferences</h3>
+                            <div class="setting-item">
+                                <div>
+                                    <div class="setting-label">Dark Mode</div>
+                                    <div class="setting-description">Switch between light and dark theme</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <button id="signOutSettings" class="save-btn">
+                            <i class="fa-solid fa-sign-out-alt"></i> Sign Out
+                        </button>
+                    </div>
+                </div>
+
+                <div id="faq-page" class="page-container">
+                    <div class="page-title">
+                        <h1>FAQ</h1>
+                        <p>Frequently asked questions</p>
+                    </div>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                How do I upload my financial statements?
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                You can upload your financial statements by navigating to the "Upload" section and selecting the file from your device. Supported formats include PDF, CSV, Excel, and Word documents.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                Can I use the app without an internet connection?
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                No, the app requires an internet connection to analyze your financial data and provide insights.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                How secure is my data?
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Your data is encrypted and stored securely. We do not share your information with third parties.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                What types of reports can I generate?
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                You can generate expense reports, income reports, budget summaries, and custom analysis based on your uploaded documents. These reports are available in the "Reports" section.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                How do I reset my password?
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Go to the "Settings" section and click on "Reset Password." You will receive an email with instructions to reset your password.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

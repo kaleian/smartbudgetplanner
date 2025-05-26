@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Financial Statements</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #1abc9c;
+            --background-light: #f4f4f4;
+            --background-dark: #2c3e50;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            background: var(--background-light);
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Header */
+        .header {
+            height: 105px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            padding: 0 20px;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        .user-profile {
+            font-size: 28px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .heading {
+            font-family: "Poppins", serif;
+            font-size: 24px;
+            color: var(--text-light);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: flex;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        /* Hamburger Button */
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 120px;
+            left: 20px;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            z-index: 1000;
+            background-color: var(--text-light);
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-right: 20px;
+            border-radius: 10px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidelist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidelist ul li {
+            margin: 15px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidelist ul li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .sidelist ul li.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .sidelist ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+
+        .sidelist ul li a i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Dashboard Content */
+        .dash-contents {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--background-light);
+            transition: margin-left 0.3s;
+        }
+
+        /* Upload Section - Updated with Drag & Drop */
+        .upload-section {
+            background-color: var(--text-light);
+            padding: 30px;
+            width: 70%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .upload-section.drag-over {
+            border: 2px dashed var(--accent-color);
+            background-color: rgba(26, 188, 156, 0.1);
+        }
+
+        .upload-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-color);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            margin: 10px 0;
+            color: var(--secondary-color);
+        }
+
+        .upload-btn {
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #16a085;
+        }
+
+        .file-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        /* Ask AI Section */
+        .ask-section {
+            background-color: var(--text-light);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 25px;
+        }
+
+        .ask-section h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .ask-section textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-family: 'Open Sans', sans-serif;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .ask-btn {
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .ask-btn:hover {
+            background-color: #16a085;
+        }
+
+        .ask-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .ai-response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .spinner {
+            display: none;
+            margin: 10px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* Transaction Breakdown */
+        .transaction-breakdown {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .transaction-breakdown h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .category {
+            margin-bottom: 15px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                top: 105px;
+                left: 0;
+                z-index: 999;
+                height: calc(100vh - 105px);
+            }
+
+            .dash-contents {
+                margin-left: 0;
+            }
+
+            .upload-section {
+                width: 100%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="smart-logo-1-4.png" alt="logo">
+        </div>
+        <div class="heading">
+            <h1>Upload</h1>
+        </div>
+        <div class="user-profile" onclick="toggleDarkMode()">
+            <i class="fa-regular fa-user"></i>
+        </div>
+    </header>
+    <div class="dashboard">
+        <!-- Hamburger Button -->
+        <div class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidelist">
+                <ul>
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                    <li class="active"><a href="upload.html"><i class="fa-solid fa-upload"></i> Upload</a></li>
+                    <li><a href="#"><i class="fa-solid fa-chart-pie"></i> Reports</a></li>
+                    <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                    <li><a href="#"><i class="fa-solid fa-envelope"></i> Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Dashboard Content -->
+        <div class="dash-contents">
+            <!-- Upload Section -->
+            <div class="upload-section" id="upload-section">
+                <h3>Upload Financial Documents</h3>
+                
+                <div class="upload-area" id="drop-area">
+                    <i class="fas fa-file-upload"></i>
+                    <p>Drag & drop your PDF file here</p>
+                    <p>or</p>
+                    <button class="upload-btn" id="browse-btn">
+                        <i class="fas fa-folder-open"></i> Browse Files
+                    </button>
+                    <input type="file" id="file-upload" accept=".pdf" style="display: none;">
+                    <div id="file-info" class="file-info">No file selected</div>
+                </div>
+                
+                <!-- Ask AI Section -->
+                <div class="ask-section">
+                    <h4>Ask About Your Document</h4>
+                    <textarea id="user-prompt" placeholder="Example: 'Summarize the key points' or 'What are my spending patterns?'"></textarea>
+                    <button class="ask-btn" id="analyze-btn">
+                        <i class="fas fa-robot"></i> Analyze Document
+                    </button>
+                    <div id="spinner" class="spinner"></div>
+                    <div id="error-message" class="error-message"></div>
+                    
+                    <div id="ai-response" class="ai-response" style="display: none;"></div>
+                    
+                    <div id="transaction-breakdown" class="transaction-breakdown"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Upload functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('drop-area');
+            const fileUpload = document.getElementById('file-upload');
+            const browseBtn = document.getElementById('browse-btn');
+            const fileInfo = document.getElementById('file-info');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const userPrompt = document.getElementById('user-prompt');
+            const aiResponse = document.getElementById('ai-response');
+            const spinner = document.getElementById('spinner');
+            const errorMessage = document.getElementById('error-message');
+            const transactionBreakdown = document.getElementById('transaction-breakdown');
+            const uploadSection = document.getElementById('upload-section');
+
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            // Browse files button
+            browseBtn.addEventListener('click', () => {
+                fileUpload.click();
+            });
+
+            // File input change
+            fileUpload.addEventListener('change', handleFiles);
+
+            // Analyze button
+            analyzeBtn.addEventListener('click', analyzeDocument);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                uploadSection.classList.add('drag-over');
+            }
+
+            function unhighlight() {
+                uploadSection.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles({ target: { files } });
+            }
+
+            function handleFiles(e) {
+                const files = e.target.files;
+                if (files.length) {
+                    fileInfo.textContent = files[0].name;
+                }
+            }
+
+            async function analyzeDocument() {
+                // Validate inputs
+                if (!fileUpload.files || fileUpload.files.length === 0) {
+                    showError('Please select a PDF file to upload.');
+                    return;
+                }
+                
+                if (!userPrompt.value.trim()) {
+                    showError('Please enter your question or instructions.');
+                    return;
+                }
+                
+                // Clear previous results and errors
+                hideError();
+                aiResponse.style.display = 'none';
+                transactionBreakdown.innerHTML = '';
+                
+                // Show loading spinner
+                spinner.style.display = 'block';
+                analyzeBtn.disabled = true;
+                
+                try {
+                    // Prepare form data
+                    const formData = new FormData();
+                    formData.append('file', fileUpload.files[0]);
+                    formData.append('prompt', userPrompt.value.trim());
+                    
+                    // Send request to backend
+                    const response = await fetch('http://localhost:5000/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'An error occurred during analysis.');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Display results
+                        aiResponse.textContent = data.analysis;
+                        aiResponse.style.display = 'block';
+                        
+                        // Try to extract transaction data for visualization
+                        try {
+                            const transactionData = extractTransactionData(data.analysis);
+                            if (transactionData) {
+                                displayTransactionBreakdown(transactionData);
+                            }
+                        } catch (e) {
+                            console.log("Couldn't extract transaction data:", e);
+                        }
+                    } else {
+                        throw new Error(data.error || 'Analysis failed.');
+                    }
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    spinner.style.display = 'none';
+                    analyzeBtn.disabled = false;
+                }
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+            
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
+            
+            function extractTransactionData(analysis) {
+                // This is a simplified parser - in a real app you'd want more robust parsing
+                // or have your backend return structured data
+                
+                // Look for patterns like "Category: X (Amount: Y)"
+                const categoryRegex = /(\w+):\s*\$\s*([\d,]+)/g;
+                const matches = [...analysis.matchAll(categoryRegex)];
+                
+                if (matches.length === 0) return null;
+                
+                const categories = {};
+                let total = 0;
+                
+                matches.forEach(match => {
+                    const category = match[1];
+                    const amount = parseFloat(match[2].replace(',', ''));
+                    categories[category] = (categories[category] || 0) + amount;
+                    total += amount;
+                });
+                
+                return {
+                    categories: categories,
+                    total: total
+                };
+            }
+            
+            function displayTransactionBreakdown(data) {
+                let html = '<h4>Spending Breakdown</h4>';
+                
+                // Sort categories by amount (descending)
+                const sortedCategories = Object.entries(data.categories)
+                    .sort((a, b) => b[1] - a[1]);
+                
+                sortedCategories.forEach(([category, amount]) => {
+                    const percentage = Math.round((amount / data.total) * 100);
+                    
+                    html += `
+                        <div class="category">
+                            <div class="category-header">
+                                <span>${category}</span>
+                                <span>$${amount.toFixed(2)} (${percentage}%)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                transactionBreakdown.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>
