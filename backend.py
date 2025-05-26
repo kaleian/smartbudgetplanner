@@ -12,7 +12,7 @@ CORS(app)  # Enable CORS for all routes
 # Configuration
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
-OPENAI_API_KEY = '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'  # Replace with your OpenAI API key
+OPENAI_API_KEY = ''  # Replace with your OpenAI API key
 
 # Ensure upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
